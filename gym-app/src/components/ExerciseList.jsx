@@ -1,0 +1,16 @@
+import ExerciseCard from "./ExerciseCard";
+
+const ExerciseList = ({ exercises }) => (
+  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+    {exercises.map((exercise) => (
+      <ExerciseCard
+        key={exercise.id}
+        name={exercise.name}
+        bodyPart={exercise.bodyPart}
+        gifUrl={exercise.gifUrl}
+      />
+    ))}
+  </div>
+);
+
+export default ExerciseList;
