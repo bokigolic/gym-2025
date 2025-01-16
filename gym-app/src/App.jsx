@@ -2,55 +2,40 @@ import { useState, useEffect } from "react";
 import Header from "./components/Header";
 import SearchBar from "./components/SearchBar";
 import ExerciseList from "./components/ExerciseList";
-import Filter from "./components/Filter"; // Dodajemo novu komponentu Filter
 import Loader from "./components/Loader";
-import { fetchExercises, fetchBodyParts } from "./api/exerciseApi"; // Dodaj poziv za delove tela
+import { fetchExercises } from "./api/exerciseApi";
 
 function App() {
-  const [exercises, setExercises] = useState([]);
-  const [filteredExercises, setFilteredExercises] = useState([]);
-  const [bodyParts, setBodyParts] = useState([]); // Svi delovi tela
-  const [selectedBodyPart, setSelectedBodyPart] = useState("all"); // Izabrani deo tela
-  const [loading, setLoading] = useState(true);
+  const [exercises, setExercises] = useState([]); // Svi vežbe
+  const [filteredExercises, setFilteredExercises] = useState([]); // Filtrirane vežbe
+  const [loading, setLoading] = useState(true); // Učitavanje
 
-  // Učitavanje vežbi i delova tela
   useEffect(() => {
-    const loadData = async () => {
+    const loadExercises = async () => {
       setLoading(true);
-      const exercisesData = await fetchExercises();
-      const bodyPartsData = await fetchBodyParts();
-      setExercises(exercisesData);
-      setFilteredExercises(exercisesData);
-      setBodyParts(["all", ...bodyPartsData]); // Dodajemo "all" za sve vežbe
+      const data = await fetchExercises(); // Preuzimanje podataka sa API-ja
+      setExercises(data); // Čuvanje svih vežbi
+      setFilteredExercises(data); // Početni prikaz svih vežbi
       setLoading(false);
     };
-    loadData();
+    loadExercises();
   }, []);
 
-  // Pretraga po nazivu
+  // Pretraga vežbi
   const handleSearch = (query) => {
     const filtered = exercises.filter((exercise) =>
       exercise.name.toLowerCase().includes(query.toLowerCase())
     );
-    setFilteredExercises(filtered);
-  };
-
-  // Filtriranje po delu tela
-  const handleFilter = (bodyPart) => {
-    setSelectedBodyPart(bodyPart);
-    if (bodyPart === "all") {
-      setFilteredExercises(exercises); // Prikaz svih vežbi
-    } else {
-      const filtered = exercises.filter(
-        (exercise) => exercise.bodyPart === bodyPart
-      );
-      setFilteredExercises(filtered);
-    }
+    setFilteredExercises(filtered); // Ažuriranje filtriranih vežbi
   };
 
   return (
-    <div className="bg-red-500 text-white p-10">
-      <h1>Hello TailwindCSS!</h1>
+    <div className="bg-gray-50 min-h-screen">
+      <Header />
+      <div className="p-4">
+        <SearchBar onSearch={handleSearch} />
+        {loading ? <Loader /> : <ExerciseList exercises={filteredExercises} />}
+      </div>
     </div>
   );
 }

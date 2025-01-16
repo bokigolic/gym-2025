@@ -7,7 +7,7 @@ const Loader = () => (
     animate={{ opacity: 1 }}
     transition={{ duration: 0.5, repeat: Infinity, repeatType: "reverse" }}
   >
-    <div className="loader border-t-4 border-b-4 border-blue-500 w-12 h-12 rounded-full animate-spin"></div>
+    <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
   </motion.div>
 );
 
